@@ -12,12 +12,13 @@
             <div id="success-message" class="bg-green-500 text-white p-4 rounded-md mb-4">
                 {{ session('success') }}
             </div>
-
-            <script>
-                setTimeout(() => {
-                    document.getElementById('success-message').style.display = 'none';
-                }, 3000);
-            </script>
+            @endif
+            @if (session('error'))
+            <div>
+                <div id="error-message" class="bg-red-500 text-white p-4 rounded-md mb-4">
+                    {{ session('error') }}
+                </div>
+            </div>
             @endif
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -36,5 +37,8 @@
             button.disabled = true;
             button.textContent = 'Importing...'; // Optional: Change button text to indicate that the import is in progress
         });
+        setTimeout(() => {
+            document.getElementById('success-message').style.display = 'none';
+        }, 3000);
     </script>
 </x-app-layout>

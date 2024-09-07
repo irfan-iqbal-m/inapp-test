@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 class UsersImport implements ToCollection, WithHeadingRow
 {
     use Importable;
+    protected $errors = [];
 
     public function collection(Collection $collection)
     {
@@ -41,7 +42,14 @@ class UsersImport implements ToCollection, WithHeadingRow
                 $obj->doj = \Carbon\Carbon::parse($row['doj']);
                 $obj->save();
                 Mail::to('g.support@lightflow.it')->locale('it')->send(new UserMail());
+            } else {
+                $this->errors[] = "Email {$row['email']} already exists.";
+                continue;
             }
         }
+    }
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

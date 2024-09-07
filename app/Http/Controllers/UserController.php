@@ -15,9 +15,18 @@ class UserController extends Controller
             'file' => 'required|mimes:csv,txt',
         ]);
 
-        Excel::import(new UsersImport, $request->file('file'));
 
-        session()->flash('success', 'Your data Imported successfully!');
-        return redirect('/dashboard');
+        try {
+            $import = new UsersImport();
+            Excel::import($import, $request->file('file'));
+
+            if ($errors = $import->getErrors()) {
+                return redirect('/dashboard')->with('error', implode(', ', $errors));
+            }
+            session()->flash('success', 'Your data Imported successfully!');
+            return redirect('/dashboard');
+        } catch (\Exception $e) {
+            return redirect('/dashboard')->with('error', $e->getMessage());
+        }
     }
 }
