@@ -25,7 +25,8 @@ class UsersImport implements ToCollection, WithHeadingRow
         $requiredHeaders = ['firstname', 'lastname', 'email', 'phone', 'doj', 'designation'];
 
         if (array_diff($requiredHeaders, $headers)) {
-            throw new \Exception('CSV headers are not in the correct format.');
+            $this->errors[] = "CSV headers are not in the correct format";
+            return $this->errors;
         }
 
         // Import data
